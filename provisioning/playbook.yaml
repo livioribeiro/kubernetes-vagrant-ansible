@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: 'yes'
+  become_user: 'root'
+  become_method: 'sudo'
+  roles:
+    - common
+
+- hosts: etcd
+  become: 'yes'
+  become_user: 'root'
+  become_method: 'sudo'
+  roles:
+    - etcd
+
+- hosts: master
+  become: 'yes'
+  become_user: 'root'
+  become_method: 'sudo'
+  roles:
+    - kube_common
+    - kube_master
+
+- hosts: minion
+  become: 'yes'
+  become_user: 'root'
+  become_method: 'sudo'
+  roles:
+    - kube_common
+    - kube_minion

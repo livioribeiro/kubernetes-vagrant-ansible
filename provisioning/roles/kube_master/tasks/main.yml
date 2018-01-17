@@ -1,0 +1,6 @@
+- name: add kubernetes apiserver configuration
+  copy:
+    src: kube_apiserver
+    dest: /etc/kubernetes/apiserver
+  notify:
+    - "start kubernetes master services"

@@ -1,0 +1,18 @@
+- name: add kubernetes yum repository
+  yum_repository:
+    name: virt7-docker-common-release
+    description: kubernetes reposirory
+    baseurl: http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/
+    gpgcheck: no
+- name: install kubernetes and flannel
+  yum:
+    name: [kubernetes, flannel]
+    enablerepo: virt7-docker-common-release
+- name: add kubernetes configuration
+  copy:
+    src: kube_config
+    dest: /etc/kubernetes/config
+- name: add flannel configuration
+  copy:
+    src: flanneld
+    dest: /etc/sysconfig/flanneld
