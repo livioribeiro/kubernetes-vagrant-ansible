@@ -4,12 +4,22 @@
 $internal_ip = '10.0.0.'
 $external_ip = '192.168.1.'
 
-$n_minion = 2
+$n_nodes = 2
 $n_etcd = 3
 
 Vagrant.configure("2") do |config|
 
   config.vm.box = "bento/centos-7.4"
+
+  config.vm.define "squid" do |machine|
+    machine.vm.network "private_network", ip: $internal_ip + '30'
+
+    machine.vm.synced_folder "cache/", "/var/spool/squid", type: "rsync", rsync__chown: false
+
+    machine.vm.provider "virtualbox" do |vb|
+      vb.memory = "1024"
+    end
+  end
 
   (1..$n_etcd).each do |i|
     config.vm.define "etcd-#{i}" do |machine|
@@ -17,18 +27,18 @@ Vagrant.configure("2") do |config|
         vb.memory = "1024"
       end
 
-      machine.vm.hostname = "centos-etcd-#{i}"
+      machine.vm.hostname = "etcd-#{i}"
       machine.vm.network "private_network", ip: $internal_ip + (20 + i).to_s
     end
   end
 
-  (1..$n_minion).each do |i|
-    config.vm.define "minion-#{i}" do |machine|
+  (1..$n_nodes).each do |i|
+    config.vm.define "node-#{i}" do |machine|
       machine.vm.provider "virtualbox" do |vb|
         vb.memory = "2048"
       end
 
-      machine.vm.hostname = "centos-minion-#{i}"
+      machine.vm.hostname = "node-#{i}"
 
       machine.vm.network "private_network", ip: $internal_ip + (10 + i).to_s
       machine.vm.network "public_network", ip: $external_ip + (10 + i).to_s, bridge: "enp3s0"
@@ -40,7 +50,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "2048"
     end
 
-    machine.vm.hostname = "centos-master"
+    machine.vm.hostname = "master"
 
     machine.vm.network "private_network", ip: $internal_ip + '10'
     machine.vm.network "public_network", ip: $external_ip + '10', bridge: "enp3s0"
@@ -49,7 +59,7 @@ Vagrant.configure("2") do |config|
       ansible.playbook = "provisioning/playbook.yaml"
       ansible.limit = "all"
       ansible.groups = {
-        "minion" => (1..$n_minion).map { |i| "minion-#{i}" },
+        "nodes" => (1..$n_nodes).map { |i| "node-#{i}" },
         "etcd" => (1..$n_etcd).map { |i| "etcd-#{i}" }
       }
     end

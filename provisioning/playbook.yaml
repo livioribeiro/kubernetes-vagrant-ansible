@@ -1,30 +1,32 @@
 ---
-- hosts: all
-  become: 'yes'
-  become_user: 'root'
-  become_method: 'sudo'
+
+- hosts: etcd master nodes
+  become: yes
+  become_user: root
+  become_method: sudo
   roles:
     - common
 
 - hosts: etcd
-  become: 'yes'
-  become_user: 'root'
-  become_method: 'sudo'
+  become: yes
+  become_user: root
+  become_method: sudo
   roles:
     - etcd
 
 - hosts: master
-  become: 'yes'
-  become_user: 'root'
-  become_method: 'sudo'
+  become: yes
+  become_user: root
+  become_method: sudo
   roles:
     - kube_common
     - kube_master
+    - calico
 
-- hosts: minion
-  become: 'yes'
-  become_user: 'root'
-  become_method: 'sudo'
+- hosts: nodes
+  become: yes
+  become_user: root
+  become_method: sudo
   roles:
     - kube_common
-    - kube_minion
+    - kube_node

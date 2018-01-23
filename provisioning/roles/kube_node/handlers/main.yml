@@ -1,10 +1,9 @@
-- name: start kubernetes minion services
-  service:
+- name: start kubernetes node services
+  systemd:
     name: "{{ item }}"
     state: restarted
     enabled: yes
   with_items:
     - kube-proxy
     - kubelet
-    - flanneld
     - docker

@@ -1,12 +1,14 @@
 - name: start etcd service
-  service:
+  systemd:
     name: etcd
     state: restarted
     enabled: yes
+
 - name: verify etcd kubernetes keys
   shell: etcdctl ls /kube-centos/network > /dev/null 2> /dev/null; echo $?
   register: result
   listen: "start etcd service"
+
 - name: initialize etcd kubernetes keys
   shell: |
     etcdctl mkdir /kube-centos/network

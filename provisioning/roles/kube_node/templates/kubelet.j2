@@ -9,7 +9,7 @@ KUBELET_PORT="--port=10250"
 KUBELET_HOSTNAME="--hostname-override={{ ansible_hostname }}"
 
 # Location of the api-server
-KUBELET_API_SERVER="--api-servers=http://centos-master:8080"
+# KUBELET_API_SERVER="--api-server=http://master:8080"
 
 # Add your own!
-KUBELET_ARGS=""
+KUBELET_ARGS="--require-kubeconfig --register-node"

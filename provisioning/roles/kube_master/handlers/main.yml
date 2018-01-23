@@ -1,5 +1,5 @@
 - name: start kubernetes master services
-  service:
+  systemd:
     name: "{{ item }}"
     state: restarted
     enabled: yes
@@ -7,4 +7,5 @@
     - kube-apiserver
     - kube-controller-manager
     - kube-scheduler
-    - flanneld
+  notify:
+    - "kube-apiserver started"

@@ -1,6 +1,6 @@
 # Flanneld configuration options
 # etcd url location.  Point this to the server where etcd runs
-FLANNEL_ETCD_ENDPOINTS="http://centos-etcd-1:2379,http://centos-etcd-2:2379,http://centos-etcd-3:2379"
+FLANNEL_ETCD_ENDPOINTS="{% for host in groups['etcd'] %}{% if loop.index > 1 %},{% endif %}http://{{ host }}:2379{% endfor %}"
 
 # etcd config key.  This is the configuration key that flannel queries
 # For address range assignment

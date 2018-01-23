@@ -1,0 +1,12 @@
+- name: add kubeconfig
+  template:
+    src: kubeconfig.j2
+    dest: /var/lib/kubelet/kubeconfig
+  notify:
+    - "start kubernetes node services"
+- name: add kubelet configuration
+  template:
+    src: kubelet.j2
+    dest: /etc/kubernetes/kubelet
+  notify:
+    - "start kubernetes node services"

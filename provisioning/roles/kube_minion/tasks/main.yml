@@ -1,6 +1,0 @@
-- name: add kubelet configuration
-  template:
-    src: kubelet.j2
-    dest: /etc/kubernetes/kubelet
-  notify:
-    - "start kubernetes minion services"

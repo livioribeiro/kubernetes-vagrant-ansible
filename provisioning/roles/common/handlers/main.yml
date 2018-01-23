@@ -1,0 +1,19 @@
+- name: update grub config
+  shell: grub2-mkconfig >/etc/grub2.cfg
+  listen:
+    - "swap removed from grub"
+
+- name: disable swap
+  command: swapoff -a
+  listen:
+    - "swap removed from grub"
+
+- name: remove swap device
+  command: lvremove -f -Ay /dev/centos/swap
+  listen:
+    - "swap removed from grub"
+
+- name: reclaim swap space
+  command: lvextend -f -l +100%FREE centos/root
+  listen:
+    - "swap removed from grub"
