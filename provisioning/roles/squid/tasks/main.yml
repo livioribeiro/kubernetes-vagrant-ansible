@@ -2,11 +2,12 @@
   yum: name=squid
 
 - name: enable cache
-  lineinfile:
+  replace:
     path: /etc/squid/squid.conf
-    regexp: "#cache_dir ufs"
-    line: cache_dir ufs /var/spool/squid 7000 16 256
-  notify: "restart squid"
+    regexp: "^#cache_dir ufs /var/spool/squid 100 16 256$"
+    replace: cache_dir ufs /var/spool/squid 7000 16 256
+  notify:
+    - restart squid
 
 - name: disable firewall
   systemd:

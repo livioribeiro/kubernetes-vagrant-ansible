@@ -3,4 +3,4 @@
     src: kube_apiserver.j2
     dest: /etc/kubernetes/apiserver
   notify:
-    - "start kubernetes master services"
+    - start kubernetes master services

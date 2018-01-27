@@ -1,12 +1,17 @@
 - name: install kubernetes and flannel
   yum:
-    name: [kubernetes, flannel]
+    name:
+      - kubernetes
+      - flannel
+
 - name: add kubernetes configuration
   copy:
     src: kube_config
     dest: /etc/kubernetes/config
 
-name: add flannel configuration
+- name: add flannel configuration
   template:
     src: flanneld.j2
     dest: /etc/sysconfig/flanneld
+  notify:
+    - restart flannel

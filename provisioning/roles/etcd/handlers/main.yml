@@ -4,14 +4,11 @@
     state: restarted
     enabled: yes
 
-- name: verify etcd kubernetes keys
-  shell: etcdctl ls /kube-centos/network > /dev/null 2> /dev/null; echo $?
-  register: result
-  listen: "start etcd service"
-
 - name: initialize etcd kubernetes keys
   shell: |
-    etcdctl mkdir /kube-centos/network
-    etcdctl mk /kube-centos/network/config '{ "Network": "172.30.0.0/16", "SubnetLen": 24, "Backend": { "Type": "vxlan" } }'
-  listen: "start etcd service"
-  when: result == 0
+    if [ $(hostname) = "etcd-1" ] &&  [ ! $(etcdctl ls /kube/network > /dev/null 2>1) ]
+    then
+      etcdctl mkdir /kube/network
+      etcdctl mk /kube/network/config '{ "Network": "172.30.0.0/16", "SubnetLen": 24, "Backend": { "Type": "vxlan" } }'
+    fi
+  listen: start etcd service

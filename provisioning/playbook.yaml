@@ -1,5 +1,12 @@
 ---
 
+- hosts: squid
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - squid
+
 - hosts: etcd master nodes
   become: yes
   become_user: root
@@ -21,7 +28,7 @@
   roles:
     - kube_common
     - kube_master
-    - calico
+    # - calico
 
 - hosts: nodes
   become: yes

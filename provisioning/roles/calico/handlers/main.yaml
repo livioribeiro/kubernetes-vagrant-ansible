@@ -10,20 +10,20 @@
 #     - "kube-apiserver started"
 #   command: kubectl apply -f /home/vagrant/rbac.yaml
 
-- name: get calico calico.yaml
-  listen:
-    - "kube-apiserver started"
-  get_url:
-    url: https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/calico.yaml
-    dest: /home/vagrant/calico.yaml
-
-- name: fix calico.yaml
-  listen:
-    - "kube-apiserver started"
-  replace:
-    path: /home/vagrant/calico.yaml
-    regexp: 'etcd_endpoints: \"http://127\.0\.0\.1:2379\"'
-    replace: "etcd_endpoints: \"{% for host in groups['etcd'] %}{% if loop.index > 1 %},{% endif %}http://{{ host }}:2379{% endfor %}\""
-
-- name: apply calico.yaml
-  command: kubectl apply -f /home/vagrant/calico.yaml
+# - name: get calico calico.yaml
+#   listen:
+#     - "kube-apiserver started"
+#   get_url:
+#     url: https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/calico.yaml
+#     dest: /home/vagrant/calico.yaml
+#
+# - name: fix calico.yaml
+#   listen:
+#     - "kube-apiserver started"
+#   replace:
+#     path: /home/vagrant/calico.yaml
+#     regexp: 'etcd_endpoints: \"http://127\.0\.0\.1:2379\"'
+#     replace: "etcd_endpoints: \"{% for host in groups['etcd'] %}{% if loop.index > 1 %},{% endif %}http://{{ host }}:2379{% endfor %}\""
+#
+# - name: apply calico.yaml
+#   command: kubectl apply -f /home/vagrant/calico.yaml

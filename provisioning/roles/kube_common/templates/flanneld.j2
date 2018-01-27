@@ -4,7 +4,7 @@ FLANNEL_ETCD_ENDPOINTS="{% for host in groups['etcd'] %}{% if loop.index > 1 %},
 
 # etcd config key.  This is the configuration key that flannel queries
 # For address range assignment
-FLANNEL_ETCD_PREFIX="/kube-centos/network"
+FLANNEL_ETCD_PREFIX="/kube/network"
 
 # Any additional options that you want to pass
 #FLANNEL_OPTIONS=""

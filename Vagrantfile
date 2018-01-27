@@ -10,11 +10,15 @@ $n_etcd = 3
 Vagrant.configure("2") do |config|
 
   config.vm.box = "bento/centos-7.4"
+  config.vm.provider "virtualbox" do |vb|
+    vb.linked_clone = true
+  end
 
   config.vm.define "squid" do |machine|
     machine.vm.network "private_network", ip: $internal_ip + '30'
 
-    machine.vm.synced_folder "cache/", "/var/spool/squid", type: "rsync", rsync__chown: false
+    machine.vm.synced_folder ".cache/squid", "/var/spool/squid", # type: "rsync", rsync__chown: false
+      owner: "root", group: "root", mount_options: ["dmode=777,fmode=777"]
 
     machine.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
