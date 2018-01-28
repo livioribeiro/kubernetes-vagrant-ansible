@@ -7,3 +7,4 @@
     - kube-apiserver
     - kube-controller-manager
     - kube-scheduler
+  # notify: kube-apiserver started

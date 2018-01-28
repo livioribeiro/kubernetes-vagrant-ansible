@@ -12,4 +12,4 @@ KUBELET_HOSTNAME="--hostname-override={{ ansible_hostname }}"
 # KUBELET_API_SERVER="--api-server=http://master:8080"
 
 # Add your own!
-KUBELET_ARGS="--require-kubeconfig --kubeconfig=/etc/kubernetes/kubeconfig"
+KUBELET_ARGS="--cgroup-driver=systemd --kubeconfig=/etc/kubernetes/kubeconfig"

@@ -6,9 +6,7 @@
 
 - name: initialize etcd kubernetes keys
   shell: |
-    if [ $(hostname) = "etcd-1" ] &&  [ ! $(etcdctl ls /kube/network > /dev/null 2>1) ]
-    then
-      etcdctl mkdir /kube/network
-      etcdctl mk /kube/network/config '{ "Network": "172.30.0.0/16", "SubnetLen": 24, "Backend": { "Type": "vxlan" } }'
-    fi
+    etcdctl mkdir /kube/network
+    etcdctl mk /kube/network/config '{ "Network": "172.30.0.0/16", "SubnetLen": 24, "Backend": { "Type": "vxlan" } }'
   listen: start etcd service
+  run_once: yes

@@ -1,3 +1,28 @@
+- name: install docker
+  yum: name=docker
+
+- name: transfer kubernetes server archive
+  unarchive:
+    src: "{{ kubernetes_package }}"
+    dest: /var/tmp/
+    remote_src: yes
+    creates: /var/tmp/kubernetes/server/bin
+
+- name: copy kubernetes node binaries
+  copy:
+    remote_src: yes
+    src: "/var/tmp/kubernetes/server/bin/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    mode: "ugo+x"
+  with_items:
+    - kubelet
+    - kube-proxy
+
+- name: create working directory
+  file:
+    path: /var/lib/kubelet
+    state: directory
+
 - name: add kubeconfig
   template:
     src: kubeconfig.j2
@@ -9,5 +34,15 @@
   template:
     src: kubelet.j2
     dest: /etc/kubernetes/kubelet
+  notify:
+    - start kubernetes node services
+
+- name: add kubernetes node services
+  copy:
+    src: "{{ item }}.service"
+    dest: "/usr/lib/systemd/system/{{ item }}.service"
+  with_items:
+    - kube-proxy
+    - kubelet
   notify:
     - start kubernetes node services

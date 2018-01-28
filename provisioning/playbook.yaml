@@ -1,12 +1,5 @@
 ---
 
-- hosts: squid
-  become: yes
-  become_user: root
-  become_method: sudo
-  roles:
-    - squid
-
 - hosts: etcd master nodes
   become: yes
   become_user: root

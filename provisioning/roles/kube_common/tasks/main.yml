@@ -1,8 +1,10 @@
-- name: install kubernetes and flannel
-  yum:
-    name:
-      - kubernetes
-      - flannel
+- name: install flannel
+  yum: name=flannel
+
+- name: create kubernetes configuration directory
+  file:
+    path: /etc/kubernetes
+    state: directory
 
 - name: add kubernetes configuration
   copy:

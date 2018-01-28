@@ -14,17 +14,6 @@ Vagrant.configure("2") do |config|
     vb.linked_clone = true
   end
 
-  config.vm.define "squid" do |machine|
-    machine.vm.network "private_network", ip: $internal_ip + '30'
-
-    machine.vm.synced_folder ".cache/squid", "/var/spool/squid", # type: "rsync", rsync__chown: false
-      owner: "root", group: "root", mount_options: ["dmode=777,fmode=777"]
-
-    machine.vm.provider "virtualbox" do |vb|
-      vb.memory = "1024"
-    end
-  end
-
   (1..$n_etcd).each do |i|
     config.vm.define "etcd-#{i}" do |machine|
       machine.vm.provider "virtualbox" do |vb|
@@ -44,6 +33,8 @@ Vagrant.configure("2") do |config|
 
       machine.vm.hostname = "node-#{i}"
 
+      machine.vm.synced_folder "./.cache/kubernetes", "/var/tmp/kubernetes"
+
       machine.vm.network "private_network", ip: $internal_ip + (10 + i).to_s
       machine.vm.network "public_network", ip: $external_ip + (10 + i).to_s, bridge: "enp3s0"
     end
@@ -58,6 +49,8 @@ Vagrant.configure("2") do |config|
 
     machine.vm.network "private_network", ip: $internal_ip + '10'
     machine.vm.network "public_network", ip: $external_ip + '10', bridge: "enp3s0"
+
+    machine.vm.synced_folder "./.cache/kubernetes", "/var/tmp/kubernetes"
 
     config.vm.provision "ansible" do |ansible|
       ansible.playbook = "provisioning/playbook.yaml"

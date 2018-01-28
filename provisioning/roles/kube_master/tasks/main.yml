@@ -1,6 +1,36 @@
+- name: transfer kubernetes server archive
+  unarchive:
+    src: "{{ kubernetes_package }}"
+    dest: /var/tmp/
+    remote_src: yes
+    creates: /var/tmp/kubernetes/server/bin
+
+- name: copy kubernetes server binaries
+  copy:
+    remote_src: yes
+    src: "/var/tmp/kubernetes/server/bin/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    mode: "ugo+x"
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
+    - kubectl
+
 - name: add kubernetes apiserver configuration
   template:
     src: kube_apiserver.j2
     dest: /etc/kubernetes/apiserver
+  notify:
+    - start kubernetes master services
+
+- name: add kubernetes master services
+  copy:
+    src: "{{ item }}.service"
+    dest: "/usr/lib/systemd/system/{{ item }}.service"
+  with_items:
+    - kube-apiserver
+    - kube-controller-manager
+    - kube-scheduler
   notify:
     - start kubernetes master services

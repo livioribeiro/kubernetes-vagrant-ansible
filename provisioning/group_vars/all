@@ -1,0 +1,2 @@
+---
+kubernetes_package: https://storage.googleapis.com/kubernetes-release/release/v1.9.2/kubernetes-server-linux-amd64.tar.gz

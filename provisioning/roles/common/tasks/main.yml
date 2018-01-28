@@ -16,27 +16,3 @@
     replace: GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=centos/root rhgb quiet"
   notify:
     - swap removed from grub
-
-# Configure squid yum proxy
-- name: disable repository mirrors
-  replace:
-    path: /etc/yum.repos.d/CentOS-Base.repo
-    regexp: '^mirrorlist='
-    replace: '#mirrorlist='
-
-- name: enable repository baseurl
-  replace:
-    path: /etc/yum.repos.d/CentOS-Base.repo
-    regexp: '^#baseurl='
-    replace: 'baseurl='
-
-- name: enable yum proxy
-  lineinfile:
-    path: /etc/yum.conf
-    regexp: "^proxy="
-    line: "proxy=http://squid:3128"
-
-- name: disable fastmirror yum plugin
-  file:
-    path: /etc/yum/pluginconf.d/fastestmirror.conf
-    state: absent
